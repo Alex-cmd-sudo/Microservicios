@@ -37,6 +37,18 @@ namespace Servicios.Api.Libreria
             services.AddTransient<IAutorRepository, AutorRepository>();
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Servicios.api.Libreria", Version = "v1" });
+            });
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsRule", rule => 
+                {
+                    rule.AllowAnyHeader().AllowAnyMethod().WithOrigins("*");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +60,8 @@ namespace Servicios.Api.Libreria
             }
 
             app.UseRouting();
+
+            app.UseCors("CorsRule");
 
             app.UseAuthorization();
 
